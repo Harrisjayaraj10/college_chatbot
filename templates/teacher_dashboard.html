@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teacher Dashboard</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    .navbar {
+      background-color: #003366;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .logout-btn {
+      background-color: #ff4d4d;
+      border: none;
+      color: white;
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .container {
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+      background-color: white;
+      margin-top: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .label {
+      font-weight: bold;
+      color: #333;
+    }
+    .value {
+      margin-bottom: 20px;
+    }
+    .search-form {
+      margin-top: 30px;
+    }
+    .search-form input {
+      padding: 8px;
+      margin-right: 10px;
+      width: 200px;
+    }
+    .search-form button {
+      padding: 8px 16px;
+    }
+    .result {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-left: 4px solid #003366;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h1>Welcome, {{ user['Name'] if 'Name' in user else 'Teacher' }}!</h1>
+    <form method="POST" action="/logout">
+      <button class="logout-btn" type="submit">Logout</button>
+    </form>
+  </div>
+
+  <div class="container">
+    <form method="POST" action="/search_student" class="search-form">
+      <label class="label">Search Student by Register Number:</label><br><br>
+      <input type="text" name="register_number" placeholder="Enter Register Number" required>
+      <button type="submit">Search</button>
+    </form>
+
+    {% if searched %}
+      <div class="result">
+        {% if student %}
+          <p><span class="label">Name:</span> {{ student['Full Name'] }}</p>
+          <p><span class="label">Register Number:</span> {{ student['Register Number'] }}</p>
+          <p><span class="label">Official Email:</span> {{ student['Official mail id'] }}</p>
+          <p><span class="label">CGPA:</span> {{ student['CGPA upto 6th'] }}</p>
+          <p><span class="label">Current Arrears:</span> {{ student['Current arrears'] }}</p>
+        {% else %}
+          <p>No student found with that register number.</p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="time-banner">
+    <span id="datetime"></span>
+  </div>
+
+  <script>
+    function updateTime() {
+      const now = new Date();
+      const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      };
+      document.getElementById('datetime').innerText = now.toLocaleString('en-IN', options);
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+  </script>
+
+  <style>
+    .time-banner {
+      background-color: #eee;
+      text-align: center;
+      padding: 10px 0;
+      font-weight: bold;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+
+</body>
+</html>
